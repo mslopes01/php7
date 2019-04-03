@@ -22,10 +22,10 @@
 		}
 
 		public function getDessenha(){
-			return $this->desenha;
+			return $this->dessenha;
 		}
 		public function setDessenha($value){
-			$this->desenha = $value;
+			$this->dessenha = $value;
 		}
 
 		public function getDtcadastro(){
@@ -97,6 +97,20 @@
 			if (count($result) > 0) {
 				$this->setData($result[0]);
 			}
+		}
+
+		public function update($login, $password){
+
+			$this->setDeslogin($login);
+			$this->setDessenha($password);
+
+			$sql = new Sql();
+
+			$result = $sql->query("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID", array(
+					":LOGIN"=>$this->getDeslogin(),
+					":PASSWORD"=>$this->getDessenha(),
+					":ID"=>$this->getUsuario()
+			));
 		}
 
 		public function __construct($login = "", $password =""){

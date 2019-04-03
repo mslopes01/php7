@@ -41,6 +41,8 @@
 	echo $usuario;
 	*/
 
+	//Criando novo usuario com procidure
+	/*
 	$aluno = new Usuario("aluno", "154181");
 
 	//$aluno->setDeslogin("aluno2");
@@ -49,5 +51,11 @@
 	$aluno->insert();
 
 	echo $aluno
+	*/
+
+	$usuario = new Usuario();
+	$usuario->loadById(8);
+	$usuario->update("professor", "888888");
+	echo $usuario;
 
 ?>
