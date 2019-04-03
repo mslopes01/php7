@@ -41,14 +41,10 @@
 			$result = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(
 					":ID"=>$id
 			));
-			// if (count($result)) {
-			if (!empty($result)) {
-				$row = $result[0];
-
-				$this->setUsuario($row['idusuario']);
-				$this->setDeslogin($row['deslogin']);
-				$this->setDessenha($row['dessenha']);
-				$this->setDtcadastro(new DateTime($row['dtcadastro']));
+			if (count($result)>0) {
+			//if (!empty($result)) {
+				
+				$this->setData($result[0]);
 
 			} else {
 				echo "Resultado não encontrado.";
@@ -73,19 +69,41 @@
 					":LOGIN"=>$login,
 					":PASSWORD"=>$password
 			));
-			if (count($result)) {
+			if (count($result)>0) {
 			//if (!empty($result)) {
-				$row = $result[0];
 
-				$this->setUsuario($row['idusuario']);
-				$this->setDeslogin($row['deslogin']);
-				$this->setDessenha($row['dessenha']);
-				$this->setDtcadastro(new DateTime($row['dtcadastro']));
+				$this->setData($result[0]);
 
 			} else {
 				throw new Exception("Login e/ou senha incorreto");
 				
 			}
+		}
+
+		public function setData($data){
+				$this->setUsuario($data['idusuario']);
+				$this->setDeslogin($data['deslogin']);
+				$this->setDessenha($data['dessenha']);
+				$this->setDtcadastro(new DateTime($data['dtcadastro']));
+		}
+
+		public function insert(){
+			$sql = new Sql();
+
+			$result = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array(
+					":LOGIN"=>$this->getDeslogin(),
+					":PASSWORD"=>$this->getDessenha()
+			));
+			if (count($result) > 0) {
+				$this->setData($result[0]);
+			}
+		}
+
+		public function __construct($login = "", $password =""){
+
+				$this->setDeslogin($login);
+				$this->setDessenha($password);
+
 		}
 
 		public function __toString(){
@@ -94,7 +112,7 @@
 				"idusuario"=>$this->getUsuario(),
 				"deslogin"=>$this->getDeslogin(),
 				"dessenha"=>$this->getDessenha(),
-				"dtcadastro"=>$this->getDtcadastro()->format('d/m/y H:m:s')
+				"dtcadastro"=>$this->getDtcadastro()->format('d-m-y H:m:s')
 			));
 		}
 
